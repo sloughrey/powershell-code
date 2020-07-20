@@ -1,60 +1,74 @@
-﻿#### Module Constants
-$PlexMediaScannerFilename = "Plex Media Scanner.exe"
-
-
-<#
+﻿<#
 .Synopsis
    Scans a single Plex library for new contents
 .DESCRIPTION
-   Refreshes a Plex library and makes new content available in Plex Media Server
-.PARAMETER PathToPMSFolder
-    The path to the Plex Media Server folder
+   Refreshes a Plex library and makes new content available in Plex Media Server for the given Plex library ID
+.PARAMETER LibraryId
+    The library id to scan for new contents
 .EXAMPLE
-   Example of how to use this cmdlet
-.EXAMPLE
-   Another example of how to use this cmdlet
-    
+   Update-PlexLibrary -LibraryId 2
 #>
-function Update-PlexLibrary
-{
+function Update-PlexLibrary {
     [CmdletBinding()]
 
     Param(
-        [Parameter(ValueFromPipeline=$true,
-                   ValueFromPipelineByPropertyName=$true)]
-        [string] $PathToPMSFolder = "C:\Program Files (x86)\Plex\Plex Media Server\"
+        [Parameter(ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [int[]] $LibraryIds,
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [string] $pathToPlexScanner = "C:\Program Files (x86)\Plex\Plex Media Server\Plex Media Scanner.exe"
     )
 
-    Begin
-    {
+    Begin {
+        # Get a list of libraries to perform validation
+        Write-Verbose "Getting list of plex libraries for validation"
+        [hashtable] $libraries = Get-PlexLibraries
     }
 
-    Process
-    {
-            # Determine which library to scan for updates
-            $pathToPlexScanner = $PathToPMSFolder + $PlexMediaScannerFilename
-            $libraries = & $pathToPlexScanner  --list
-            
-            [int[]] $validLibIds = @()
-            
-            foreach( $lib in $libraries){
-                # lib looks like: "5: Library name" where 5 is the library id
-                $pieces = $lib.split(':')
-                $validLibIds += $pieces[0]
+    Process {
+        foreach ($libId in $LibraryIds) {
+            if ($libraries.ContainsKey($libId) -eq $true) {
+                $libName = $libraries[$libId]
+                Write-Verbose "Scanning library $libName"
+                & $pathToPlexScanner --scan --section $libId
             }
-
-            Write-Output $libraries
-
-            do {
-                [int] $libIdToScan = Read-Host "Select a library id to update"
-
-            } while ($validLibIds.Contains($libIdToScan) -eq $false)
-
-            # Scan the selected library
-            $result = & $pathToPlexScanner --scan --section $libIdToScan
+            else {
+                Write-Warning "Plex library not found for ID: $libId"
+            }
+        }
     }
 
-    End
-    {
+    End {
+        Write-Verbose "Done scanning all libraries"
     }
+}
+
+<#
+.Synopsis
+   Gets a hashtable with Plex library info
+.DESCRIPTION
+   Returns a hash table containing the library ID as the key and the Plex library name as the value
+.EXAMPLE
+   Get-PlexLibraries
+.OUTPUTS
+    Hashtable
+#>
+function Get-PlexLibraries {
+    try {
+        $libraries = & $pathToPlexScanner  --list
+    }
+    catch {
+        Write-Error "Plex libraries could not be grabbed using Plex Media Scanner.  Path to exe is: $pathToPlexscanner"
+    }
+
+    [hashtable] $libs = @{}
+    foreach ( $lib in $libraries) {
+        # lib looks like: "5: Library name" where 5 is the library id
+        $pieces = $lib.split(':')
+        [string] $libName = $pieces[1].trim()
+        [int] $libId = $pieces[0]
+        $libs[$libId] = $libName
+    }
+
+    Write-Output $libs
 }
