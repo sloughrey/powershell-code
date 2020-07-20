@@ -72,3 +72,6 @@ function Get-PlexLibraries {
 
     Write-Output $libs
 }
+
+# Module functions to make available
+Export-ModuleMember -Function Get-PlexLibraries, Update-PlexLibrary
