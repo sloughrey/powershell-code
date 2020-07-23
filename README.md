@@ -1,4 +1,3 @@
 # powershell-code
 
-### Module List
-- Plex
+A variety of scripts created while learning Powershell
