@@ -2,10 +2,15 @@
 
 Get-PlexLibraries | Out-String | Write-Host -ForegroundColor Cyan
 
-$libsToUpdate = Read-Host "Enter Plex library IDs to update"
+Write-Host -ForegroundColor Green "Enter Plex library IDs to update one at a time and blank when finished"
 
-# **** Add this validation function ****
-# Validate that the libs to update are valid ids
-# if(isValidPlexLibraryId($libsToUpdate)){
-Update-PlexLibrary $libsToUpdate
-#}
+[array] $libsToUpdate = @()
+do {
+    $libId = Read-Host
+
+    if ($libsToUpdate.contains($libId) -eq $false -and $libId -ne "") {
+        $libsToUpdate += $libId
+    }
+} while ($libId -ne "")
+
+Update-PlexLibrary -LibraryIds $libsToUpdate -Verbose
