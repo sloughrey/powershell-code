@@ -1,12 +1,12 @@
 ﻿<#
-.Synopsis
-   Scans a single Plex library for new contents
-.DESCRIPTION
-   Refreshes a Plex library and makes new content available in Plex Media Server for the given Plex library ID
-.PARAMETER LibraryId
+    .Synopsis
+    Scans a single Plex library for new contents
+    .DESCRIPTION
+    Refreshes a Plex library and makes new content available in Plex Media Server for the given Plex library ID
+    .PARAMETER LibraryId
     The library id to scan for new contents
-.EXAMPLE
-   Update-PlexLibrary -LibraryId 2
+    .EXAMPLE
+    Update-PlexLibrary -LibraryId 2
 #>
 function Update-PlexLibrary {
     [CmdletBinding()]
@@ -14,7 +14,7 @@ function Update-PlexLibrary {
     Param(
         [Parameter(ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [int[]] $LibraryIds,
+        [int[]] $libraryIds,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [string] $pathToPlexScanner = "C:\Program Files (x86)\Plex\Plex Media Server\Plex Media Scanner.exe"
     )
@@ -26,7 +26,7 @@ function Update-PlexLibrary {
     }
 
     Process {
-        foreach ($libId in $LibraryIds) {
+        foreach ($libId in $libraryIds) {
             if ($libraries.ContainsKey($libId) -eq $true) {
                 $libName = $libraries[$libId]
                 Write-Verbose "Scanning library $libName"

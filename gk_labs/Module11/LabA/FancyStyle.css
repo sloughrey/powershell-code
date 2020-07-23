@@ -1,0 +1,34 @@
+body {
+    width: 90%;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+	border-width: 0px;
+}
+table {
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+	border-collapse: collapse;
+}
+th {
+	border-width: 1px;
+	padding: 3px;
+	border-style: solid;
+	border-color: black;
+	background-color: lightblue;
+}
+td {
+	border-width: 1px;
+	padding: 3px;
+	border-style: solid;
+	border-color: black;
+}
+tr:Nth-Child(Even) {
+	Background-Color: lightgrey;
+}
+tr:Hover TD {
+	Background-Color: cyan;
+}

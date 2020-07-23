@@ -1,0 +1,5 @@
+﻿<machines>
+  <machine name='Alpha' />
+  <machine name='Bravo' />
+  <machine name='Echo' />
+</machines>
