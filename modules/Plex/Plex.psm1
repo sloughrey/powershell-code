@@ -1,14 +1,14 @@
 ﻿<#
     .Synopsis
-    Scans a single Plex library for new contents
+    Scans Plex libraries for new content
     .DESCRIPTION
-    Refreshes a Plex library and makes new content available in Plex Media Server for the given Plex library ID
-    .PARAMETER LibraryId
-    The library id to scan for new contents
+    Refreshes Plex libraries and makes new content available in Plex Media Server for the given Plex library IDs
+    .PARAMETER LibraryIds
+    The library ids to scan for new contents
     .EXAMPLE
-    Update-PlexLibrary -LibraryId 2
+    Update-PlexLibraries -LibraryId 2
 #>
-function Update-PlexLibrary {
+function Update-PlexLibraries {
     [CmdletBinding()]
 
     Param(
@@ -54,24 +54,34 @@ function Update-PlexLibrary {
     Hashtable
 #>
 function Get-PlexLibraries {
-    try {
-        $libraries = & $pathToPlexScanner  --list
-    }
-    catch {
-        Write-Error "Plex libraries could not be grabbed using Plex Media Scanner.  Path to exe is: $pathToPlexscanner"
+    [CmdletBinding()]
+
+    Param(
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        [string] $pathToPlexScanner = "C:\Program Files (x86)\Plex\Plex Media Server\Plex Media Scanner.exe"
+    )
+
+    Begin {}
+
+    Process {
+        try {
+            $libraries = & $pathToPlexScanner  --list
+        }
+        catch {
+            Write-Error "Plex libraries could not be grabbed using Plex Media Scanner.  Path to exe is: $pathToPlexScanner"
+        }
+
+        [hashtable] $libs = @{}
+        foreach ( $lib in $libraries) {
+            # lib looks like: "5: Library name" where 5 is the library id
+            $pieces = $lib.split(':')
+            [string] $libName = $pieces[1].trim()
+            [int] $libId = $pieces[0]
+            $libs[$libId] = $libName
+        }
+
+        Write-Output $libs
     }
 
-    [hashtable] $libs = @{}
-    foreach ( $lib in $libraries) {
-        # lib looks like: "5: Library name" where 5 is the library id
-        $pieces = $lib.split(':')
-        [string] $libName = $pieces[1].trim()
-        [int] $libId = $pieces[0]
-        $libs[$libId] = $libName
-    }
-
-    Write-Output $libs
+    End {}
 }
-
-# Module functions to make available
-Export-ModuleMember -Function Get-PlexLibraries, Update-PlexLibrary

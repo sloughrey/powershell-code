@@ -13,4 +13,4 @@ do {
     }
 } while ($libId -ne "")
 
-Update-PlexLibrary -LibraryIds $libsToUpdate -Verbose
+Update-PlexLibraries -LibraryIds $libsToUpdate -Verbose
