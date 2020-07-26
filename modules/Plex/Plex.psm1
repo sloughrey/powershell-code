@@ -1,14 +1,16 @@
 ﻿<#
     .Synopsis
-    Scans Plex libraries for new content
+        Scans a single Plex library for new contents
     .DESCRIPTION
-    Refreshes Plex libraries and makes new content available in Plex Media Server for the given Plex library IDs
-    .PARAMETER LibraryIds
-    The library ids to scan for new contents
+        Refreshes a Plex library and makes new content available in Plex Media Server for the given Plex library ID
+    .PARAMETER libraryIds
+        The library id to scan for new contents
+    .PARAMETER pathToPlexScanner
+        The full path to the Plex media scanner executable
     .EXAMPLE
-    Update-PlexLibraries -LibraryId 2
+        Update-PlexLibrary -LibraryId 2
 #>
-function Update-PlexLibraries {
+function Update-PlexLibrary {
     [CmdletBinding()]
 
     Param(
