@@ -14,6 +14,7 @@
 13 Using both an alias and abbreviated parameter names, what is the shortest command line you could type to retrieve a list of running processes from a computer named Server1?
 14 How many cmdlets are available that can deal with generic objects? (Hint: Remember to use a singular noun like “object” rather than a plural one like “objects”).
 15 This chapter briefly mentioned arrays. What help topic could tell you more about them?
+16 The Help command can also search the contents of a help file. Are there any topics that might explain any breaking changes between PowerShell v1 and PowerShell v2
 #>
 
 # 1 ConvertTo-Html
