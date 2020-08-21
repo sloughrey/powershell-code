@@ -24,7 +24,7 @@ function Update-PlexLibrary {
     Begin {
         # Get a list of libraries to perform validation
         Write-Verbose "Getting list of plex libraries for validation"
-        [hashtable] $libraries = Get-PlexLibraries
+        [hashtable] $libraries = Get-PlexLibrary
     }
 
     Process {
@@ -55,7 +55,7 @@ function Update-PlexLibrary {
 .OUTPUTS
     Hashtable
 #>
-function Get-PlexLibraries {
+function Get-PlexLibrary {
     [CmdletBinding()]
 
     Param(
